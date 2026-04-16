@@ -3,6 +3,7 @@ import time
 import pandas as pd
 import joblib
 import numpy as np
+from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -15,21 +16,21 @@ ALERT_LOG = os.path.join(PROJECT_DIR, "attack_alerts.log")
 os.makedirs(ZEEK_LOG_DIR, exist_ok=True)
 
 # ---------------- LOAD MODEL PIPELINE ----------------
-# Load trained XGBoost model
-model = joblib.load(os.path.join(PROJECT_DIR, "intrusion_model_xgb.pkl"))
+# Load trained Random Forest model
+model = joblib.load(os.path.join(PROJECT_DIR, "intrusion_model_rf.pkl"))
+
+# Load threshold
+threshold = joblib.load(os.path.join(PROJECT_DIR, "rf_threshold.pkl"))
 
 # Load scaler and label encoders
 scaler = joblib.load(os.path.join(PROJECT_DIR, "scaler.pkl"))
 label_encoders = joblib.load(os.path.join(PROJECT_DIR, "label_encoders.pkl"))
 
-# Load top features used during training
-top_features = joblib.load(os.path.join(PROJECT_DIR, "feature_names.pkl"))
-top_features = [str(f) for f in top_features]
-
-# Categorical columns
+# Load selected features used during training
+top_features = pd.read_csv(os.path.join(PROJECT_DIR, "selected_features.csv"))["feature"].tolist()
 categorical_cols = list(label_encoders.keys())
 
-print("[INFO] XGBoost detector loaded successfully")
+print("[INFO] Random Forest detector loaded successfully")
 print("[INFO] Features used:", top_features)
 
 # ---------------- HANDLER ----------------
@@ -46,8 +47,8 @@ class ZeekLogHandler(FileSystemEventHandler):
             if df.empty:
                 return
 
-            # Align columns and order
-            X = df.reindex(columns=top_features, fill_value=0)
+            # Align columns and ensure correct DataFrame with column names
+            X = pd.DataFrame(df.reindex(columns=top_features, fill_value=0), columns=top_features)
 
             # Encode categorical features safely
             for col in categorical_cols:
@@ -66,12 +67,12 @@ class ZeekLogHandler(FileSystemEventHandler):
             # Ensure all numeric
             X = X.apply(pd.to_numeric, errors="coerce").fillna(0)
 
-            # Scale features
-            X_scaled = scaler.transform(X.values)
+            # Scale features (keep as DataFrame)
+            X_scaled = pd.DataFrame(scaler.transform(X), columns=top_features)
 
-            # Predict with XGBoost and threshold 0.25
+            # Predict with Random Forest and threshold
             probs = model.predict_proba(X_scaled)[:, 1]
-            preds = (probs > 0.25).astype(int)
+            preds = (probs >= threshold).astype(int)
 
             df["prediction"] = preds
             attacks = df[df["prediction"] == 1]
@@ -82,10 +83,12 @@ class ZeekLogHandler(FileSystemEventHandler):
 
             # --------- ALERT OUTPUT ---------
             if not attacks.empty:
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 with open(ALERT_LOG, "a") as f:
                     for _, row in attacks.iterrows():
-                        print("[ALERT] Attack detected!")
-                        f.write(str(row.to_dict()) + "\n")
+                        alert = {"timestamp": timestamp, **row.to_dict()}
+                        print(f"[ALERT] Attack detected! {alert}")
+                        f.write(str(alert) + "\n")
 
         except Exception as e:
             print(f"[ERROR] Processing failed: {e}")

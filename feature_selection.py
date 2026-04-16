@@ -1,27 +1,27 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-import joblib
+import matplotlib.pyplot as plt
 
 print("Loading processed datasets...")
 
 X_train = pd.read_csv("X_train.csv")
-X_test = pd.read_csv("X_test.csv")
-y_train = pd.read_csv("y_train.csv")
-y_test = pd.read_csv("y_test.csv")
+y_train = pd.read_csv("y_train.csv").values.ravel()
 
-y_train = y_train.values.ravel()
-y_test = y_test.values.ravel()
-
-print("Training RandomForest for Feature Importance...")
+# ---------------- MODEL ----------------
+print("Training optimized Random Forest for Feature Importance...")
 
 model = RandomForestClassifier(
-    n_estimators=200,
-    random_state=42,
-    n_jobs=-1
+    n_estimators=500,
+    max_depth=40,
+    min_samples_leaf=3,
+    class_weight="balanced",
+    n_jobs=-1,
+    random_state=42
 )
 
 model.fit(X_train, y_train)
 
+# ---------------- FEATURE IMPORTANCE ----------------
 print("Extracting feature importance...")
 
 importances = model.feature_importances_
@@ -32,9 +32,26 @@ feature_df = pd.DataFrame({
     "importance": importances
 }).sort_values(by="importance", ascending=False)
 
+# Save full importance
 feature_df.to_csv("feature_importance.csv", index=False)
+
+# Save top features separately
+top_features = feature_df.head(30)
+top_features.to_csv("top_features.csv", index=False)
 
 print("\nTop 20 Important Features:")
 print(feature_df.head(20))
 
-print("\nSaved to feature_importance.csv")
+# ---------------- VISUALIZATION ----------------
+plt.figure()
+plt.barh(top_features["feature"], top_features["importance"])
+plt.gca().invert_yaxis()
+plt.title("Top 30 Feature Importance")
+plt.xlabel("Importance")
+plt.ylabel("Features")
+plt.tight_layout()
+plt.show()
+
+print("\nSaved:")
+print(" - feature_importance.csv")
+print(" - top_features.csv")
