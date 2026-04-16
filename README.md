@@ -144,14 +144,15 @@ Joblib
 ## 🚀 How to Run
 - ## 1️⃣ Create Virtual Environment
 - python3 -m venv cyberenv
+  
 -source cyberenv/bin/activate
-- ## 2️⃣ Install Dependencies
+ ## 2️⃣ Install Dependencies
 - pip install -r requirements.txt
-- ## 3️⃣ Preprocess Dataset
+ ## 3️⃣ Preprocess Dataset
 - python3 train_ensemble.py
-- ## 4️⃣ Train Model
+ ## 4️⃣ Train Model
 - python3 train_ensemble.py
-- ## 5️⃣ Run Real-Time Detection
+ ## 5️⃣ Run Real-Time Detection
 - python3 zeek_realtime_detector_ubuntu.py
 
 ## 🔑 Key Insights
