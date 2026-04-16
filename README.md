@@ -104,10 +104,8 @@ Instead of using a default threshold (0.5):
 2. Logs are converted into feature vectors
 3. Trained ML model performs predictions
 4. Alerts are generated for detected attacks
-   
 
-### 💻 Script
-
+## Project Structure
 capstone_project/
 │── preprocess_unsw.py
 │── feature_selection.py
@@ -119,3 +117,17 @@ capstone_project/
 │── zeek_realtime_detector_ubuntu.py
 │── zeek_logs/
 │── README.md
+
+## 🛠️ Technologies Used
+Python 3.10
+Scikit-learn
+XGBoost
+Pandas / NumPy
+Zeek IDS
+Joblib
+
+## 🚀 How to Run
+- ## 1️⃣ Create Virtual Environment
+- python3 -m venv cyberenv
+source cyberenv/bin/activate
+
