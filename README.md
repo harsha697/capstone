@@ -104,24 +104,18 @@ Instead of using a default threshold (0.5):
 2. Logs are converted into feature vectors
 3. Trained ML model performs predictions
 4. Alerts are generated for detected attacks
+   
 
 ### 💻 Script
 
-```bash
-zeek_realtime_detector_ubuntu.py
-
-## 👨‍💻 Author
-
-SIVAKOTI HARSHAVARDHAN
-
----
-
-## ⭐ Acknowledgements
-
-* UNSW Canberra Cybersecurity Research Group
-* Zeek (formerly Bro) Network Security Monitor
-* Open-source ML community
-
----
-
-⭐ *If you find this project useful, consider starring the repository!*
+capstone_project/
+│── preprocess_unsw.py
+│── feature_selection.py
+│── train_model.py
+│── train_xgboost.py
+│── train_ensemble.py
+│── evaluate_model.py
+│── evaluate_threshold.py
+│── zeek_realtime_detector_ubuntu.py
+│── zeek_logs/
+│── README.md
