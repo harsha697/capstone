@@ -1,194 +1,114 @@
-# Real-Time Cyberattack Detection Using Machine Learning and Zeek
+# 🚨 Real-Time Cyberattack Detection using Machine Learning & Zeek
 
-## 📌 Project Overview
+## 📌 Overview
 
-This project implements a **real-time network intrusion detection system (NIDS)** by combining **machine learning models** with **Zeek network monitoring logs**. The system is trained on the **UNSW-NB15 dataset** and is capable of detecting malicious network traffic in near real-time.
+This project presents a **Real-Time Network Intrusion Detection System (NIDS)** that combines **machine learning models** with **Zeek network monitoring logs** to detect cyberattacks as they occur.
 
-The core idea is to bridge **traditional network monitoring (Zeek)** with **modern ML-based anomaly detection**, achieving higher detection capability for complex and evolving cyberattacks.
+Trained on the **UNSW-NB15 dataset**, the system is designed to identify malicious traffic with high accuracy while maintaining strong recall — a critical requirement in cybersecurity.
 
 ---
 
 ## 🎯 Objectives
 
-* Detect cyberattacks from network traffic with high accuracy
-* Reduce false negatives while maintaining acceptable false positives
-* Support **real-time inference** using Zeek logs
-* Compare and combine multiple ML models
-* Build a deployable, modular, and extensible IDS pipeline
+- Detect cyberattacks from network traffic with high accuracy
+- Minimize **false negatives** (missed attacks)
+- Enable **real-time detection using Zeek logs**
+- Compare multiple ML models and improve performance using ensemble learning
+- Build a modular and scalable IDS pipeline
 
 ---
 
 ## 🧠 Models Used
 
-The project explores multiple machine learning models:
+### 🌲 Random Forest
+- Strong baseline model
+- Handles non-linear relationships
+- Robust against overfitting
 
-### 1. Random Forest Classifier
+### ⚡ XGBoost
+- Gradient boosting algorithm
+- High performance on structured data
+- Handles class imbalance effectively
 
-* Strong baseline model
-* Handles non-linear relationships well
-* Robust to noise and overfitting
-
-### 2. XGBoost Classifier
-
-* Gradient-boosted decision trees
-* Performs well on structured/tabular data
-* Handles class imbalance effectively
-
-### 3. Ensemble Model (Soft Voting)
-
-* Combines **Random Forest + XGBoost**
-* Uses **probability-based (soft) voting**
-* Improves generalization and recall
+### 🤝 Ensemble Model (Soft Voting)
+- Combines **Random Forest + XGBoost**
+- Uses probability-based predictions
+- Improves overall generalization and detection capability
 
 ---
 
 ## 📊 Dataset
 
-* **Dataset:** UNSW-NB15
-* **Type:** Network intrusion dataset
-* **Classes:**
-
-  * 0 → Normal traffic
-  * 1 → Attack traffic
-
-### Preprocessing Steps
-
-* Label encoding of categorical features
-* Feature scaling (StandardScaler)
-* Feature selection
-* Class imbalance handling
+- **Dataset:** UNSW-NB15  
+- **Type:** Network intrusion dataset  
+- **Classes:**
+  - `0` → Normal Traffic
+  - `1` → Attack Traffic  
 
 ---
 
-## 🧪 Model Performance (Ensemble)
+## ⚙️ Preprocessing Steps
 
-| Metric             | Value    |
-| ------------------ | -------- |
-| Accuracy           | **~72%** |
-| Precision (Attack) | ~72%     |
-| Recall (Attack)    | **~63%** |
-| F1-score (Attack)  | ~77%     |
-
-### Confusion Matrix
-
-* True Positives (Attacks detected): **37,625**
-* False Negatives (Missed attacks): **7,707**
-
-📌 **High recall is prioritized**, making the system suitable for security environments where missing attacks is costly.
+- Handling missing values
+- Label encoding categorical features
+- Feature scaling using StandardScaler
+- Feature selection (Top 20 important features)
+- Class imbalance handling using **SMOTE**
 
 ---
 
-## ⚙️ Threshold Optimization
+## 🧪 Model Performance
 
-Instead of using a fixed 0.5 decision threshold:
+### 🔹 Ensemble Model Results
 
-* Model probabilities are evaluated across multiple thresholds
-* Optimal threshold is selected using **F1-score maximization**
-* Final threshold used: **0.10**
+| Metric        | Value |
+|--------------|------|
+| Accuracy     | **~92.47%** |
+| Precision    | ~92% |
+| Recall       | ~94% |
+| F1-score     | **~93%** |
 
-This improves attack detection sensitivity in real-world scenarios.
+### 📌 Confusion Matrix
+
+- True Positives (Attack detected): **42,651**
+- False Negatives (Missed attacks): **2,681**
+- False Positives: **3,516**
+- True Negatives: **33,484**
+
+✅ The model achieves **high recall**, making it suitable for real-world cybersecurity applications where missing attacks is costly.
+
+---
+
+## 📈 ROC Curve
+
+- **AUC Score:** ~0.98  
+- Indicates excellent model separability between attack and normal traffic.
+
+---
+
+## 🎯 Threshold Optimization
+
+Instead of using a default threshold (0.5):
+
+- Tested multiple probability thresholds
+- Selected optimal threshold based on **F1-score**
+- Final threshold improved detection sensitivity
 
 ---
 
 ## 🛰️ Real-Time Detection with Zeek
 
-### Workflow
+### 🔄 Workflow
 
 1. Zeek captures live network traffic
-2. Logs are parsed and transformed into feature vectors
-3. Pre-trained ensemble model performs inference
-4. Detected attacks are logged and alerted
+2. Logs are converted into feature vectors
+3. Trained ML model performs predictions
+4. Alerts are generated for detected attacks
 
-### Script
-
-* `zeek_realtime_detector_ubuntu.py`
-
-This enables near real-time cyberattack detection on live networks.
-
----
-
-## 📁 Project Structure
-
-```
-capstone_project/
-│── preprocess_unsw.py
-│── feature_selection.py
-│── train_model.py
-│── train_xgboost.py
-│── train_ensemble.py
-│── evaluate_model.py
-│── evaluate_threshold.py
-│── evaluate_xgboost_threshold.py
-│── zeek_realtime_detector_ubuntu.py
-│── .gitignore
-│── README.md
-```
-
----
-
-## 🛠️ Technologies Used
-
-* **Python 3.10**
-* **Scikit-learn**
-* **XGBoost**
-* **Pandas / NumPy**
-* **Zeek IDS**
-* **Joblib**
-
----
-
-## 🚀 How to Run
-
-### 1. Create virtual environment
+### 💻 Script
 
 ```bash
-python3 -m venv cyberenv
-source cyberenv/bin/activate
-```
-
-### 2. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Preprocess data
-
-```bash
-python3 preprocess_unsw.py
-```
-
-### 4. Train ensemble model
-
-```bash
-python3 train_ensemble.py
-```
-
-### 5. Run real-time detection
-
-```bash
-python3 zeek_realtime_detector_ubuntu.py
-```
-
----
-
-## 📌 Key Takeaways
-
-* Ensemble learning significantly improves intrusion detection
-* Threshold tuning is critical for security-focused ML systems
-* Zeek + ML provides a powerful hybrid IDS
-* Recall is more important than raw accuracy in cybersecurity
-
----
-
-## 🔮 Future Enhancements
-
-* Multi-class attack classification
-* Deep learning models (LSTM / CNN)
-* Online learning for evolving threats
-* Web dashboard for alerts and visualization
-
----
+zeek_realtime_detector_ubuntu.py
 
 ## 👨‍💻 Author
 
