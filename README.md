@@ -107,6 +107,7 @@ Instead of using a default threshold (0.5):
 
 ## Project Structure
 capstone_project/
+
 │── preprocess_unsw.py
 
 │── feature_selection.py
@@ -129,17 +130,21 @@ capstone_project/
 
 ## 🛠️ Technologies Used
 Python 3.10
+
 Scikit-learn
+
 XGBoost
+
 Pandas / NumPy
+
 Zeek IDS
+
 Joblib
 
 ## 🚀 How to Run
 - ## 1️⃣ Create Virtual Environment
 - python3 -m venv cyberenv
-
-source cyberenv/bin/activate
+-source cyberenv/bin/activate
 - ## 2️⃣ Install Dependencies
 - pip install -r requirements.txt
 - ## 3️⃣ Preprocess Dataset
@@ -160,8 +165,6 @@ Zeek + ML provides a powerful hybrid intrusion detection system
 
 ## 🔮 Future Improvements
 Multi-class attack classification
-
-Deep learning models (LSTM / CNN)
 
 Real-time dashboard (Streamlit / Web App)
 
