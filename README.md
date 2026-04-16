@@ -142,9 +142,8 @@ Zeek IDS
 Joblib
 
 ## 🚀 How to Run
-- ## 1️⃣ Create Virtual Environment
+ ## 1️⃣ Create Virtual Environment
 - python3 -m venv cyberenv
-  
 -source cyberenv/bin/activate
  ## 2️⃣ Install Dependencies
 - pip install -r requirements.txt
