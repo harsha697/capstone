@@ -108,14 +108,23 @@ Instead of using a default threshold (0.5):
 ## Project Structure
 capstone_project/
 │── preprocess_unsw.py
+
 │── feature_selection.py
+
 │── train_model.py
+
 │── train_xgboost.py
+
 │── train_ensemble.py
+
 │── evaluate_model.py
+
 │── evaluate_threshold.py
+
 │── zeek_realtime_detector_ubuntu.py
+
 │── zeek_logs/
+
 │── README.md
 
 ## 🛠️ Technologies Used
@@ -129,5 +138,36 @@ Joblib
 ## 🚀 How to Run
 - ## 1️⃣ Create Virtual Environment
 - python3 -m venv cyberenv
+
 source cyberenv/bin/activate
+- ## 2️⃣ Install Dependencies
+- pip install -r requirements.txt
+- ## 3️⃣ Preprocess Dataset
+- python3 train_ensemble.py
+- ## 4️⃣ Train Model
+- python3 train_ensemble.py
+- ## 5️⃣ Run Real-Time Detection
+- python3 zeek_realtime_detector_ubuntu.py
+
+## 🔑 Key Insights
+Ensemble learning significantly improves detection performance
+
+Threshold tuning is critical in security systems
+
+High recall is more important than accuracy in IDS
+
+Zeek + ML provides a powerful hybrid intrusion detection system
+
+## 🔮 Future Improvements
+Multi-class attack classification
+
+Deep learning models (LSTM / CNN)
+
+Real-time dashboard (Streamlit / Web App)
+
+Online learning for adaptive threat detection
+
+## 👨‍💻 Author
+Sivakoti Harshavardhan
+
 
